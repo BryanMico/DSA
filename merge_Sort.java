@@ -1,61 +1,111 @@
-public class merge_Sort {                       // We’re making a recipe called merge_Sort
+public class merge_Sort
+{
+    public static void main(String[] args)
+    {
+        int[] arr = {5, 2, 4, 3, 1};
+        mergeS(arr);
+        int index = bsearch(arr, 5);
+        int pos = lsearch(arr, 3);
 
-    public static void main(String[] args) {    // This is where our story begins
-        
-        int[] array = {5, 3, 1, 4, 2};          // Here’s our messy pile of numbers
-        
-        mergeSort(array, 0, array.length - 1);  // Let’s ask the computer to clean it up
-        
-        System.out.println("\n Sorted array:"); // Tell the computer to say “Sorted array:”
-        
-        for (int num : array)                    // For each number in the cleaned-up list
-            System.out.print(num + " ");         // Print that number one by one
-    }
-
-    static void mergeSort(int[] arr, int left, int right) {  // Function to clean up part of the list
-        if (left < right) {                                 // If there’s more than one number here
-            
-            int mid = (left + right) / 2;                   // Find the middle to split the list
-            
-            mergeSort(arr, left, mid);                       // Clean the left half first
-            
-            mergeSort(arr, mid + 1, right);                  // Clean the right half next
-            
-            merge(arr, left, mid, right);                     // Now put both halves back together in order
+        for(int i = 0; i < arr.length; i++)
+        {
+            System.out.print(arr[i] + " ");
         }
+
+        if (index != -1) System.out.println("\nBinary Search Index = " + index);
+        else System.out.println("\nBinary Search index not found");
+
+        if (pos != -1) System.out.println("\nLinear Search Index = " + pos);
+        else System.out.println("\nLinear Search index not found");
     }
 
-    static void merge(int[] arr, int left, int mid, int right) {  // Putting two halves back together in order
-        int n1 = mid - left + 1;                                  // Size of left half
-        int n2 = right - mid;                                     // Size of right half
-        
-        int[] L = new int[n1];                                    // Make a new small box for left half
-        int[] R = new int[n2];                                    // Make a new small box for right half
-        
-        for (int i = 0; i < n1; i++)                             // Put left half numbers in the box
-            L[i] = arr[left + i];
-        
-        for (int j = 0; j < n2; j++)                             // Put right half numbers in the box
-            R[j] = arr[mid + 1 + j];
-        
-        int i = 0, j = 0, k = left;                              // Start looking at both boxes and the big list
-        
-        while (i < n1 && j < n2) {                               // While both boxes still have numbers
-            
-            if (L[i] <= R[j]) {                                  // If left box’s number is smaller or equal
-                arr[k] = L[i];                                   // Put that number into the big list
-                i++;                                             // Look at the next number in left box
-            } else {
-                arr[k] = R[j];                                   // Otherwise, pick number from right box
-                j++;                                             // Look at the next number in right box
+    private static int bsearch(int[] arr, int target)
+    {
+        int l = 0;
+        int r = arr.length - 1;
+
+        while (l <= r)
+        {
+            int mid = l + (r - l) / 2;
+            int val = arr[mid];
+
+            if(val < target) l = mid + 1;
+            else if (val > target) r = mid - 1;
+            else return mid;
+        }
+
+        return -1;
+    }
+
+    private static int lsearch(int[]arr, int target)
+    {
+        for(int i = 0; i < arr.length; i++)
+        {
+            if(arr[i] == target) return i;
+        }
+
+        return -1;
+    }
+
+    private static void mergeS(int[] arr)
+    {
+        int length = arr.length;
+        int mid = length / 2;
+
+        if (length <= 1) return;
+
+        int[]left = new int[mid];
+        int[]right = new int[length - mid];
+
+        for(int i = 0; i < mid; i++)
+        {
+            left[i] = arr[i];
+        }
+
+        for(int i = mid; i < length; i++)
+        {
+            right[i - mid] = arr[i];
+        }
+
+        mergeS(left);
+        mergeS(right);
+        merge(left, right, arr);
+    }
+
+    private static void merge(int[] left, int[] right, int[] arr)
+    {
+        int l = 0;
+        int r = 0;
+        int m = 0;
+
+        while (l < left.length && r < right.length)
+        {
+            if(left[l] < right[r])
+            {
+                arr[m] = left[l];
+                l++;
             }
-            k++;                                                 // Move to the next spot in big list
+            else
+            {
+                arr[m] = right[r];
+                r++;
+            }
+            m++;
         }
-        
-        while (i < n1)                                           // If left box still has numbers left
-            arr[k++] = L[i++];                                   // Copy them all to big list
-        
-        while (j < n2)                                           // If right box still has numbers left
-            arr[k++] = R[j++];                                   // Copy them all to big list
+
+        while(l < left.length)
+        {
+            arr[m] = left[l];
+            l++;
+            m++;
+        }
+
+        while ( r  < right.length)
+        {
+            arr[m] = right[r];
+            r++;
+            m++;
+        }
+
     }
 }
